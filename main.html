@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal2009X</title>
+    <style>
+        body {
+        	background-color: black;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        #displayArea {
+            padding: 2px;
+            color: white;
+            height: 90%;
+            font-family: monospace;
+            font-size: 16px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            width: 94%;
+            padding: 5px;
+            margin: 0;
+			border: 2px solid rgb(220, 220, 220, 0.3);
+        }
+        #inputArea {
+            color: white;
+            width: 94%;
+            font-family: monospace;
+            font-size: 16px;
+            white-space: pre-wrap;
+            padding: 5px;
+            background-color: rgba(250, 250, 250, 0.005);
+            outline: none;
+            border: 2px solid rgb(220, 220, 220, 0.3);
+            margin: 0;
+        }
+#settingsMenu {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 70%;
+    background-color: #222;
+    border: 2px solid gray;
+    z-index: 100;
+    overflow: auto;
+    padding: 10px;
+    margin: 0;
+}
+
+#settingsMenu textarea {
+    width: 100%;
+    height: 80%;
+    font-family: monospace;
+    font-size: 14px;
+    background-color: black;
+    color: white;
+    border: 2px solid gray;
+    padding: 5px;
+    resize: none;
+    box-sizing: border-box;
+}
+
+        #settingsMenu button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 14px;
+            background-color: gray;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #settingsMenu button:hover {
+            background-color: white;
+            color: black;
+        }
+        p {
+        margin: 2px 0px 0px 10px;
+        }
+        
+        .container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 10px;
+            }
+            
+            .mod {
+            
+            margin: 3px;
+            padding: 0;
+            }
+    </style>
+</head>
+<body>
+	<div class="container">
+    <p id="displayArea" readonly></p>
+    <input type="text" id="inputArea" spellcheck="false" autocomplete="off" placeholder="Enter Prompt">
+    </div>
+    <div id="settingsMenu">
+    	<h3 class="mod" style="color: white;">Modifications: (Javascript)</h3>
+        <textarea id="settingsEditor"></textarea>
+        <br>
+        <button id="saveSettings">Save</button>
+        <button id="resetSettings">Reset</button>
+        <button id="closeSettings">Close</button>
+    </div>
+    
+    <script>
+const displayArea = document.getElementById('displayArea');
+const inputArea = document.getElementById('inputArea');
+const settingsMenu = document.getElementById('settingsMenu');
+const settingsEditor = document.getElementById('settingsEditor');
+const saveButton = document.getElementById('saveSettings');
+const resetButton = document.getElementById('resetSettings');
+const closeButton = document.getElementById('closeSettings');
+
+
+let defaultCommands = `
+if (input === "hello") {
+    say(">>hello", "gray");
+    say("hello User");
+} else if (input === "alert hello") {
+    say(">>alert hello", "gray");
+    alert("Hello");
+} else if (input === "random number") {
+    say(">>random number", "gray");
+    say(Math.round(Math.random() * 100) + 0);
+} else if (input === "/reload") {
+    clear();
+    intro();
+} else if (input === "/clear") {
+    clear();
+} else if (input === "") {
+    say(">>", "gray");
+} else if (input === "/help") {
+    say(">>/help", "gray");
+    say("Available commands:\\n");
+    say("hello, alert hello, random number, /help, /clear, /reload, /config, /fake", "lightgray");
+}
+`;
+
+
+
+
+
+
+function say(text, color, value = "text") {
+if (value === "text") { 
+    const p = document.createElement('p');
+    p.textContent = text;
+    p.style.color = color || 'white';
+    
+    displayArea.appendChild(p);
+    displayArea.scrollTop = displayArea.scrollHeight;
+} else if (value === "hr") { 
+	const hr = document.createElement('hr');
+    displayArea.appendChild(hr);
+    displayArea.scrollTop = displayArea.scrollHeight;
+}}
+
+
+
+
+
+let customCommands = getCookie("settings") || defaultCommands;
+
+
+function processCommand(input) {
+if (input === "/config") {
+    say(">>/config", "gray");
+        openSettingsMenu();
+        return;
+    }
+    let customCommandsV2 = customCommands.trim();
+    customCommandsV2 = customCommandsV2 + `
+	  else if (input === "/fake") {
+        commandFake()
+    } else if (input.startsWith("/fake2")) {
+	commandFake2(input.replace("/fake2", ''))
+} else if (input === "/hackerTyper") {
+    toggleHackerTyperCommand();
+    } else if (input === "/confirm" && checkForConfirm === true) {
+    checkForConfirm = false
+setTimeout(() => { say("HackerTyper Mode Starting in 1", "lightgray") }, 00)
+setTimeout(() => { say("HackerTyper Mode Starting in 2", "lightgray") }, 500)
+setTimeout(() => { say("HackerTyper Mode Starting..", "lightgray") }, 1000)
+setTimeout(() => { say("Reload the page to exit.", "red") }, 1100)
+setTimeout(() => {
+confirmHackerTyperMode = true
+
+toggleHackerTyperCommand()
+clear()
+        inputArea.value = "Start Typing...";
+
+}, 3000)
+setTimeout(() => {inputArea.value = "Start Typing...";}, 4100)
+setTimeout(() => {inputArea.value = "Start Typ";}, 4300)
+setTimeout(() => {inputArea.value = "Start";}, 4500)
+setTimeout(() => {inputArea.value = "";}, 4700)
+
+    } else {
+        say(\`'${input}' is not recognized as an internal or external command, operable program or batch file.\`, "rgba(231,72,86,255)")
+            if (checkForConfirm) {
+        checkForConfirm = false
+        say("HackerTyper canceled", "lightgray")}
+    }
+    
+
+    `;
+    try {
+    eval(customCommandsV2);
+    } catch (error) {
+        say(`Error in settings/modifications:\n`, "rgba(231,72,86,255)");
+        say(`	${error}`, "#c1c1be");
+    }
+}
+inputArea.addEventListener('keydown', function(event) {
+if (hackerTyperMode === true) return;
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const userInput = inputArea.value.trim();
+        inputArea.value = "";
+        processCommand(userInput);
+    }
+});
+
+function openSettingsMenu() {
+    settingsEditor.value = customCommands;
+    settingsMenu.style.display = 'block';
+}
+
+function saveSettings() {
+    let sanitizedCommands = settingsEditor.value.replace(/;/g, '');
+    customCommands = sanitizedCommands;
+    setCookie("settings", customCommands, 365);
+    settingsMenu.style.display = 'none';
+}
+
+
+function resetSettings() {
+    customCommands = defaultCommands;
+    settingsEditor.value = defaultCommands;
+    setCookie("settings", defaultCommands, 365);
+}
+
+function closeSettingsMenu() {
+    settingsMenu.style.display = 'none';
+}
+
+saveButton.addEventListener('click', saveSettings);
+resetButton.addEventListener('click', resetSettings);
+closeButton.addEventListener('click', closeSettingsMenu);
+
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `expires=${date.toUTCString()}`;
+    document.cookie = `${name}=${encodeURIComponent(value)};${expires};path=/`;
+}
+
+function getCookie(name) {
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        const c = cookies[i].trim();
+        if (c.indexOf(name + "=") === 0) {
+            return c.substring(name.length + 1);
+        }
+    }
+    return null;
+}
+
+intro()
+
+function delay(input, time) {
+setTimeout(() => {
+eval(input)
+}, time)
+}
+
+
+function clear() {
+        displayArea.textContent = "";
+}
+
+
+function intro() {
+setTimeout(() => {
+  say("|  ------------------------------------------------");
+}, 40);
+
+setTimeout(() => {
+  say("|  Terminal2009X [Version 0.0.0.01]");
+}, 80);
+
+setTimeout(() => {
+  say("|  Copyright © 2024 - 2025 Orzubek2009®. All rights reserved.");
+}, 120);
+
+setTimeout(() => {
+  say("|  ------------------------------------------------");
+}, 190);
+
+setTimeout(() => {
+  say("\nSystem Ready To Use.");
+}, 260);
+
+setTimeout(() => {
+  say("   Type '/help' for a list of commands.");
+}, 300);
+}
+
+
+function commandFake() {
+
+//messages to say in start
+let delay = 0;
+
+function randomDelay() {
+    return (Math.floor(Math.random() * 10) + 0) > 8 ? (Math.floor(Math.random() * 50) + 0) : (Math.floor(Math.random() * 150) + 0);
+}
+
+
+
+
+const messages = [
+  "|  Initializing system components...",
+  "|  Checking for updates...",
+  "|  Verifying system integrity...",
+  "|  Establishing network connection...",
+  "|  IP Address: 192.168.1.101",
+  "|  Connecting to DNS server...",
+    "",
+    "",
+  "",
+
+  "|  Downloading necessary files... #DownloadingFiles",
+    "",
+  "",
+  "",
+
+  "|  Download progress: 1% [#                   ]",
+  "|  Download progress: 2% [#                   ]",
+  "|  Download progress: 3% [#                   ]",
+  "|  Download progress: 4% [#                   ]",
+  "|  Download progress: 5% [#                   ]",
+  "|  Download progress: 6% [#                   ]",
+  "|  Download progress: 7% [#                   ]",
+  "|  Download progress: 8% [#                   ]",
+  "|  Download progress: 9% [#                   ]",
+  "|  Download progress: 10% [##                  ]",
+  "|  Download progress: 11% [##                  ]",
+  "|  Download progress: 12% [##                  ]",
+  "|  Download progress: 13% [##                  ]",
+  "|  Download progress: 14% [##                  ]",
+  "|  Download progress: 15% [##                  ]",
+  "|  Download progress: 16% [##                  ]",
+  "|  Download progress: 17% [##                  ]",
+  "|  Download progress: 18% [##                  ]",
+  "|  Download progress: 19% [##                  ]",
+  "|  Download progress: 20% [###                 ]",
+  "|  Download progress: 21% [###                 ]",
+  "|  Download progress: 22% [###                 ]",
+  "|  Download progress: 23% [###                 ]",
+  "|  Download progress: 24% [###                 ]",
+  "|  Download progress: 25% [###                 ]",
+  "|  Download progress: 26% [###                 ]",
+  "|  Download progress: 27% [###                 ]",
+  "|  Download progress: 28% [###                 ]",
+  "|  Download progress: 29% [###                 ]",
+  "|  Download progress: 30% [####                ]",
+  "|  Download progress: 31% [####                ]",
+  "|  Download progress: 32% [####                ]",
+  "|  Download progress: 33% [####                ]",
+  "|  Download progress: 34% [####                ]",
+  "|  Download progress: 35% [####                ]",
+  "|  Download progress: 36% [####                ]",
+  "|  Download progress: 37% [####                ]",
+  "|  Download progress: 38% [####                ]",
+  "|  Download progress: 39% [####                ]",
+  "|  Download progress: 40% [#####               ]",
+  "|  Download progress: 41% [#####               ]",
+  "|  Download progress: 42% [#####               ]",
+  "|  Download progress: 43% [#####               ]",
+  "|  Download progress: 44% [#####               ]",
+  "|  Download progress: 45% [#####               ]",
+  "|  Download progress: 46% [#####               ]",
+  "|  Download progress: 47% [#####               ]",
+  "|  Download progress: 48% [#####               ]",
+  "|  Download progress: 49% [#####               ]",
+  "|  Download progress: 50% [######              ]",
+  "|  Download progress: 51% [######              ]",
+  "|  Download progress: 52% [######              ]",
+  "|  Download progress: 53% [######              ]",
+  "|  Download progress: 54% [######              ]",
+  "|  Download progress: 55% [######              ]",
+  "|  Download progress: 56% [######              ]",
+  "|  Download progress: 57% [######              ]",
+  "|  Download progress: 58% [######              ]",
+  "|  Download progress: 59% [######              ]",
+  "|  Download progress: 60% [#######             ]",
+  "|  Download progress: 61% [#######             ]",
+  "|  Download progress: 62% [#######             ]",
+  "|  Download progress: 63% [#######             ]",
+  "|  Download progress: 64% [#######             ]",
+  "|  Download progress: 65% [#######             ]",
+  "|  Download progress: 66% [#######             ]",
+  "|  Download progress: 67% [#######             ]",
+  "|  Download progress: 68% [#######             ]",
+  "|  Download progress: 69% [#######             ]",
+  "|  Download progress: 70% [########            ]",
+  "|  Download progress: 71% [########            ]",
+  "|  Download progress: 72% [########            ]",
+  "|  Download progress: 73% [########            ]",
+  "|  Download progress: 74% [########            ]",
+  "|  Download progress: 75% [########            ]",
+  "|  Download progress: 76% [########            ]",
+  "|  Download progress: 77% [########            ]",
+  "|  Download progress: 78% [########            ]",
+  "|  Download progress: 79% [########            ]",
+  "|  Download progress: 80% [#########           ]",
+  "|  Download progress: 81% [#########           ]",
+  "|  Download progress: 82% [#########           ]",
+  "|  Download progress: 83% [#########           ]",
+  "|  Download progress: 84% [#########           ]",
+  "|  Download progress: 85% [#########           ]",
+  "|  Download progress: 86% [#########           ]",
+  "|  Download progress: 87% [#########           ]",
+  "|  Download progress: 88% [#########           ]",
+  "|  Download progress: 89% [#########           ]",
+  "|  Download progress: 90% [##########          ]",
+  "|  Download progress: 91% [##########          ]",
+  "|  Download progress: 92% [##########          ]",
+  "|  Download progress: 93% [##########          ]",
+  "|  Download progress: 94% [##########          ]",
+  "|  Download progress: 95% [##########          ]",
+  "|  Download progress: 96% [##########          ]",
+  "|  Download progress: 97% [##########          ]",
+  "|  Download progress: 98% [##########          ]",
+  "|  Download progress: 99% [##########          ]",
+  "|  Download progress: 100% [###################]",
+    "",
+  "",
+  "",
+
+  "|  Files successfully downloaded.",
+  "|  Checking disk space...",
+  "|  Available space: 125.6 GB",
+  "|  Installing required packages...",
+    "",
+  "",
+  "",
+
+  "|  Installation progress: 1% [#                   ]",
+  "|  Installation progress: 2% [#                   ]",
+  "|  Installation progress: 3% [#                   ]",
+  "|  Installation progress: 4% [#                   ]",
+  "|  Installation progress: 5% [#                   ]",
+  "|  Installation progress: 6% [#                   ]",
+  "|  Installation progress: 7% [#                   ]",
+  "|  Installation progress: 8% [#                   ]",
+  "|  Installation progress: 9% [#                   ]",
+  "|  Installation progress: 10% [##                  ]",
+  "|  Installation progress: 100% [###################]",
+    "",
+  "",
+  "",
+
+  "|  Installation complete.",
+  "|  Configuring network adapters...",
+  "|  MAC Address: 00:1A:2B:3C:4D:5E",
+  "|  Testing connection stability...",
+  "|  Ping to gateway: 32ms",
+  "|  Dependencies installed.",
+  "|  Cleaning temporary files...",
+  "|  Temporary files removed.",
+  "|  Initializing user interface...",
+  "|  Launching services...",
+  "|  Service 'Authentication' started.",
+  "|  Service 'Database' started.",
+  "|  Service 'Networking' started.",
+  "|  Verifying IP routing table...",
+  "|  Gateway: 192.168.1.1",
+  "|  Subnet Mask: 255.255.255.0",
+  "|  Starting data synchronization...",
+    "",
+  "",
+  "",
+
+  "|  Sync progress: 1% [#                   ]",
+  "|  Sync progress: 2% [#                   ]",
+  "|  Sync progress: 3% [#                   ]",
+  "|  Sync progress: 4% [#                   ]",
+  "|  Sync progress: 5% [#                   ]",
+  "|  Sync progress: 6% [#                   ]",
+  "|  Sync progress: 7% [#                   ]",
+  "|  Sync progress: 8% [#                   ]",
+  "|  Sync progress: 9% [#                   ]",
+  "|  Sync progress: 10% [##                  ]",
+  "|  Sync progress: 11% [##                  ]",
+  "|  Sync progress: 12% [##                  ]",
+  "|  Sync progress: 13% [##                  ]",
+  "|  Sync progress: 14% [##                  ]",
+  "|  Sync progress: 15% [##                  ]",
+  "|  Sync progress: 16% [##                  ]",
+  "|  Sync progress: 17% [##                  ]",
+  "|  Sync progress: 18% [##                  ]",
+  "|  Sync progress: 19% [##                  ]",
+  "|  Sync progress: 20% [###                 ]",
+  "|  Sync progress: 21% [###                 ]",
+  "|  Sync progress: 22% [###                 ]",
+  "|  Sync progress: 23% [###                 ]",
+  "|  Sync progress: 24% [###                 ]",
+  "|  Sync progress: 25% [###                 ]",
+  "|  Sync progress: 26% [###                 ]",
+  "|  Sync progress: 27% [###                 ]",
+  "|  Sync progress: 28% [###                 ]",
+  "|  Sync progress: 29% [###                 ]",
+  "|  Sync progress: 30% [####                ]",
+  "|  Sync progress: 31% [####                ]",
+  "|  Sync progress: 32% [####                ]",
+  "|  Sync progress: 33% [####                ]",
+  "|  Sync progress: 34% [####                ]",
+  "|  Sync progress: 35% [####                ]",
+  "|  Sync progress: 36% [####                ]",
+  "|  Sync progress: 37% [####                ]",
+  "|  Sync progress: 38% [####                ]",
+  "|  Sync progress: 39% [####                ]",
+  "|  Sync progress: 40% [#####               ]",
+  "|  Sync progress: 41% [#####               ]",
+  "|  Sync progress: 42% [#####               ]",
+  "|  Sync progress: 43% [#####               ]",
+  "|  Sync progress: 44% [#####               ]",
+  "|  Sync progress: 45% [#####               ]",
+  "|  Sync progress: 46% [#####               ]",
+  "|  Sync progress: 47% [#####               ]",
+  "|  Sync progress: 48% [#####               ]",
+  "|  Sync progress: 49% [#####               ]",
+  "|  Sync progress: 50% [######              ]",
+  "|  Sync progress: 51% [######              ]",
+  "|  Sync progress: 52% [######              ]",
+  "|  Sync progress: 53% [######              ]",
+  "|  Sync progress: 54% [######              ]",
+  "|  Sync progress: 55% [######              ]",
+  "|  Sync progress: 56% [######              ]",
+  "|  Sync progress: 57% [######              ]",
+  "|  Sync progress: 58% [######              ]",
+  "|  Sync progress: 59% [######              ]",
+  "|  Sync progress: 60% [#######             ]",
+  "|  Sync progress: 61% [#######             ]",
+  "|  Sync progress: 62% [#######             ]",
+  "|  Sync progress: 63% [#######             ]",
+  "|  Sync progress: 64% [#######             ]",
+  "|  Sync progress: 65% [#######             ]",
+  "|  Sync progress: 66% [#######             ]",
+  "|  Sync progress: 67% [#######             ]",
+  "|  Sync progress: 68% [#######             ]",
+  "|  Sync progress: 69% [#######             ]",
+  "|  Sync progress: 70% [########            ]",
+  "|  Sync progress: 71% [########            ]",
+  "|  Sync progress: 72% [########            ]",
+  "|  Sync progress: 73% [########            ]",
+  "|  Sync progress: 74% [########            ]",
+  "|  Sync progress: 75% [########            ]",
+  "|  Sync progress: 76% [########            ]",
+  "|  Sync progress: 77% [########            ]",
+  "|  Sync progress: 78% [########            ]",
+  "|  Sync progress: 79% [########            ]",
+  "|  Sync progress: 80% [#########           ]",
+  "|  Sync progress: 81% [#########           ]",
+  "|  Sync progress: 82% [#########           ]",
+  "|  Sync progress: 83% [#########           ]",
+  "|  Sync progress: 84% [#########           ]",
+  "|  Sync progress: 85% [#########           ]",
+  "|  Sync progress: 86% [#########           ]",
+  "|  Sync progress: 87% [#########           ]",
+  "|  Sync progress: 88% [#########           ]",
+  "|  Sync progress: 89% [#########           ]",
+  "|  Sync progress: 90% [##########          ]",
+  "|  Sync progress: 91% [##########          ]",
+  "|  Sync progress: 92% [##########          ]",
+  "|  Sync progress: 93% [##########          ]",
+  "|  Sync progress: 94% [##########          ]",
+  "|  Sync progress: 95% [##########          ]",
+  "|  Sync progress: 96% [##########          ]",
+  "|  Sync progress: 97% [##########          ]",
+  "|  Sync progress: 98% [##########          ]",
+  "|  Sync progress: 99% [###########         ]",
+  "|  Sync progress: 100% [###################]",
+  "\n",
+  "\n",
+  "\n",
+  "|  Data synchronization complete.",
+  "|  Running diagnostic tests...",
+  "|  CPU test: PASSED",
+  "|  Memory test: PASSED",
+  "|  Disk test: PASSED",
+  "|  Network test: PASSED",
+  "|  Finalizing setup...",
+  "|  Setup complete!",
+  "",
+  "|  ------------------------------------------------",
+  "|  Network Terminal [Version 0.0.0.01]",
+  "|  Copyright © 2024 - 2025 Orzubek2009®. All rights reserved.",
+  "|  ------------------------------------------------",
+  "\n\nSystem Ready To Use.",
+  "-  Type 'help' for a list of commands.\n"
+];
+
+messages.forEach((message) => {
+    setTimeout(() => {
+        say(message);
+    }, delay);
+    delay += randomDelay();
+});
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let checkForConfirm = false;
+let hackerTyperMode = false;
+let confirmHackerTyperMode = false;
+let hackerCode = "";
+let currentIndex = 0;
+
+async function fetchHackerCode() {
+    try {
+        const response = await fetch("https://raw.githubusercontent.com/Orzubek2009/js/refs/heads/main/random.py");
+        hackerCode = await response.text();
+        currentIndex = 0;
+    } catch (error) {
+        say("Failed to fetch code for HackerTyper.", "red");
+    }
+}
+
+function processHackerTyper(event) {
+    if (hackerTyperMode && hackerCode.length > 0) {
+        event.preventDefault();
+        if (currentIndex < hackerCode.length) {
+            const nextChar = hackerCode[currentIndex];
+            displayArea.textContent += nextChar;
+            displayArea.scrollTop = displayArea.scrollHeight;
+            currentIndex++;
+            inputArea.value = hackerCode[currentIndex] + hackerCode[currentIndex + 1] + hackerCode[currentIndex + 2] + hackerCode[currentIndex + 3] + hackerCode[currentIndex + 4] + hackerCode[currentIndex + 5];
+            inputArea.style.color = "gray"
+        }
+    }
+}
+
+inputArea.addEventListener("keydown", (event) => {
+    if (!hackerTyperMode) return;
+    processHackerTyper(event);
+});
+
+function toggleHackerTyperCommand() {
+	if (confirmHackerTyperMode === true) {
+    hackerTyperMode = !hackerTyperMode;
+    if (hackerTyperMode) {
+        fetchHackerCode();
+		displayArea.style.color = "#04f504"
+        }
+    } else {
+    	say("HackTyper is a mode where pressing any key on your keyboard automatically types a prewritten code. To continue, type '/confirm' to enable HackTyper.", "rgb(245, 250, 100)")
+        checkForConfirm = true
+    }
+}
+
+
+
+
+
+
+async function commandFake2(time) {
+	time = time * 1000
+    try {
+        const response = await fetch("https://raw.githubusercontent.com/Orzubek2009/js/refs/heads/main/random.py");
+        const fakeCode = await response.text();
+        const fakeLines = fakeCode.split('\n'); // Split the code into lines
+        let currentFakeLine = 0;
+
+        function displayFakeCode() {
+            if (currentFakeLine < fakeLines.length) {
+                say(fakeLines[currentFakeLine], "lightgray");
+                currentFakeLine++;
+                setTimeout(displayFakeCode, time); // Adjust the interval as needed
+            }
+        }
+
+        displayFakeCode();
+    } catch (error) {
+        say("Failed to fetch code for /fake2.", "red");
+    }
+}
+
+    </script>
+</body>
+</html>
