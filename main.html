@@ -147,7 +147,7 @@ if (input === "hello") {
 } else if (input === "/help") {
     say(">>/help", "gray");
     say("Available commands:\\n");
-    say("hello, alert hello, random number, /help, /clear, /reload, /config, /fake", "lightgray");
+    say("hello, alert hello, random number, /help, /clear, /reload, /fake, /fake2, /hackerTyper, /mod", "lightgray");
 }
 `;
 
@@ -178,8 +178,8 @@ let customCommands = getCookie("settings") || defaultCommands;
 
 
 function processCommand(input) {
-if (input === "/config") {
-    say(">>/config", "gray");
+if (input === "/mod") {
+    say(">>/mod", "gray");
         openSettingsMenu();
         return;
     }
