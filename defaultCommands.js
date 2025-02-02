@@ -1,4 +1,3 @@
-let defaultCommands = `
 if (input === "hello") {
     say(">>hello", "gray");
     say("hello User");
@@ -20,4 +19,3 @@ if (input === "hello") {
     say("Available commands:\\n");
     say("hello, alert hello, random number, /help, /clear, /reload, /fake, /fake2, /hackerTyper, /mod", "lightgray");
 }
-`;
