@@ -140,9 +140,14 @@ async function fetchURL(url) {
         const data = await response.text();
         return data;
     } catch (error) {
-        say("Failed to fetch code for Default Commands:" + error, "rgba(231,72,86,255)");
+        say(`Failed to fetch code for \"${url}\", Error:` + error, "rgba(231,72,86,255)");
     }
 }
+
+
+
+
+
 
 fetchURL("https://raw.githubusercontent.com/Orzubek2009/Terminal2009X/refs/heads/main/assets/defaultCommands.js").then((data) => {
         defaultCommands = data;
@@ -153,7 +158,10 @@ fetchURL("https://raw.githubusercontent.com/Orzubek2009/Terminal2009X/refs/heads
 
 
 
-
+async function importCommands(url) {
+	let data = await fetchURL(url)
+	say(data);
+}
 
 
 
