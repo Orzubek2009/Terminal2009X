@@ -120,6 +120,9 @@
     </div>
     
     <script>
+    
+let version = '1.00.00'    
+
 const displayArea = document.getElementById('displayArea');
 const inputArea = document.getElementById('inputArea');
 const settingsMenu = document.getElementById('settingsMenu');
@@ -129,29 +132,25 @@ const resetButton = document.getElementById('resetSettings');
 const closeButton = document.getElementById('closeSettings');
 
 
-let defaultCommands = `
-if (input === "hello") {
-    say(">>hello", "gray");
-    say("hello User");
-} else if (input === "alert hello") {
-    say(">>alert hello", "gray");
-    alert("Hello");
-} else if (input === "random number") {
-    say(">>random number", "gray");
-    say(Math.round(Math.random() * 100) + 0);
-} else if (input === "/reload") {
-    clear();
-    intro();
-} else if (input === "/clear") {
-    clear();
-} else if (input === "") {
-    say(">>", "gray");
-} else if (input === "/help") {
-    say(">>/help", "gray");
-    say("Available commands:\\n");
-    say("hello, alert hello, random number, /help, /clear, /reload, /fake, /fake2, /hackerTyper, /mod", "lightgray");
+let defaultCommands;
+
+async function fetchURL(url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error("Failed to fetch code for Default Commands:", error);
+    }
 }
-`;
+
+fetchURL("https://raw.githubusercontent.com/Orzubek2009/Terminal2009X/refs/heads/main/defaultCommands.js").then((data) => {
+        defaultCommands = data;
+    });
+
+
+
+
 
 
 
@@ -286,6 +285,8 @@ function getCookie(name) {
 
 intro()
 
+
+
 function delay(input, time) {
 setTimeout(() => {
 eval(input)
@@ -304,7 +305,7 @@ setTimeout(() => {
 }, 40);
 
 setTimeout(() => {
-  say("|  Terminal2009X [Version 0.0.0.03]");
+  say(`|  Terminal2009X [Version ${version}]`);
 }, 80);
 
 setTimeout(() => {
