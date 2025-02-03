@@ -156,8 +156,6 @@ fetchURL("https://raw.githubusercontent.com/Orzubek2009/Terminal2009X/refs/heads
 
 
 
-
-//Users can use importCommands function in mod menu to import commands from url ideal for compaction
 function importCommands(url) {
     fetch(url)
         .then(response => response.text())
@@ -423,7 +421,7 @@ function toggleHackerTyperCommand() {
 		displayArea.style.color = "#04f504"
         }
     } else {
-    	say("HackTyper is a mode where pressing any key on your keyboard automatically types a prewritten code. To continue, type '/confirm' to enable HackTyper.", "rgb(245, 250, 100)")
+    	say("HackTyper is a mode where pressing any key on your keyboard automatically types a prewritten code. To continue, type '/confirm'.", "rgb(245, 250, 100)")
         checkForConfirm = true
     }
 }
