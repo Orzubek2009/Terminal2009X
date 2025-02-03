@@ -157,12 +157,20 @@ fetchURL("https://raw.githubusercontent.com/Orzubek2009/Terminal2009X/refs/heads
 
 
 
-
-async function importCommands(url) {
-	let data = await fetchURL(url)
-	say(data);
+//Users can use importCommands function in mod menu to import commands from url ideal for compaction
+function importCommands(url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(code => {
+            try {
+                new Function(code)(); 
+                console.log(`Imported script from ${url}`);
+            } catch (error) {
+                console.error(`Error executing script: ${error}`);
+            }
+        })
+        .catch(error => console.error(`Failed to fetch script: ${error}`));
 }
-
 
 
 function say(text, color, value = "text") {
