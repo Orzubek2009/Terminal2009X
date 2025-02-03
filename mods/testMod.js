@@ -1,2 +1,2 @@
-say('apples it workedd!!!')
+say('apples it workedd!!!', "green")
 alert('apples')
