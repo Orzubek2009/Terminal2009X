@@ -164,12 +164,11 @@ function importCommands(url) {
         .then(code => {
             try {
                 new Function(code)(); 
-                console.log(`Imported script from ${url}`);
             } catch (error) {
-                console.error(`Error executing script: ${error}`);
+                say(`Error executing script: ${error}`);
             }
         })
-        .catch(error => console.error(`Failed to fetch script: ${error}`));
+        .catch(error => say(`Failed to fetch script: ${error}`, 'rgba(231,72,86,255)'));
 }
 
 
